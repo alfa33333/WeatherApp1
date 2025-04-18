@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using WeatherApp.Models;
 
@@ -36,7 +37,22 @@ public class HomeController : Controller
         if (response.IsSuccessStatusCode)
         {
             var weatherData = await response.Content.ReadAsStringAsync();
-            return Content(weatherData); // For demonstration, return raw JSON
+            using var jsonDoc = JsonDocument.Parse(weatherData);
+            // Deserialize JSON to WeatherModel
+            var currentWeather = jsonDoc.RootElement.GetProperty("current");
+            WeatherModel currentWeatherModel = new WeatherModel
+            {
+                location = jsonDoc
+                    .RootElement.GetProperty("location")
+                    .GetProperty("name")
+                    .GetString(), // Extract "name" property
+                temperature = currentWeather.GetProperty("temp_c").GetSingle(), // Extract "temp_c" property
+                condition = currentWeather.GetProperty("condition").GetProperty("text").GetString(),
+            };
+            // return Content(
+            //     $"Location: {currentWeatherModel.location} Current temperature: {currentWeatherModel.temperature}°C"
+            // ); // For demonstration, return raw string
+            return View(currentWeatherModel); // Return the view with the weather data
         }
 
         return StatusCode((int)response.StatusCode, "Error fetching weather data");
