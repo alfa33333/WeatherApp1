@@ -2,5 +2,12 @@
 @{
 }
 
-<h1>Weather Forecast</h1>
-<p>@Model.location</p>
+<div class="d-flex justify-content-center">
+    <div class="p-5">
+        <h1>Weather Forecast</h1>
+        <h3 class="display-3 p-1" >@Model.temperature &deg; C</h2>
+        <img src="@Model.icon" alt="Weather Icon" class="img-fluid" style="width: 35%;" />
+        <h3 class="" >@Model.condition</h3>
+        <h3 class="">@Model.location</h3>
+    </div>
+</div>

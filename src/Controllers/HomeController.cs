@@ -48,6 +48,8 @@ public class HomeController : Controller
                     .GetString(), // Extract "name" property
                 temperature = currentWeather.GetProperty("temp_c").GetSingle(), // Extract "temp_c" property
                 condition = currentWeather.GetProperty("condition").GetProperty("text").GetString(),
+                icon =
+                    $"http:{currentWeather.GetProperty("condition").GetProperty("icon").GetString()}",
             };
             // return Content(
             //     $"Location: {currentWeatherModel.location} Current temperature: {currentWeatherModel.temperature}°C"
